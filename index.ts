@@ -7,7 +7,7 @@ export interface Color {
   lum: number;
 }
 
-export function decomposeCompoundRgb(compoundRgb) {
+export function decomposeCompoundRgb(compoundRgb: number) {
   const red = compoundRgb & 0xFF
   const green = (compoundRgb >> 8) & 0xFF
   const blue = (compoundRgb >> 16) & 0xFF
@@ -88,9 +88,9 @@ export module ColorFactory {
 
   export module ByRGB {
     class RgbColor implements Color {
-      private _hue: number;
-      private _sat: number;
-      private _lum: number;
+      private _hue = 0;
+      private _sat = 0;
+      private _lum = 0;
 
       public get hue(): number {
         return this._hue;
@@ -111,7 +111,7 @@ export module ColorFactory {
       public static create(red: number, green: number, blue: number): Color {
 
         console.error("Not implemented");
-        return null;
+        return new RgbColor(0, 0, 0);
       }
     }
 

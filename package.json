@@ -5,16 +5,19 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "test"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cancelcraft/ColorUtility.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Tom Conley",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/cancelcraft/ColorUtility/issues"
   },
-  "homepage": "https://github.com/cancelcraft/ColorUtility#readme"
+  "homepage": "https://github.com/cancelcraft/ColorUtility#readme",
+  "devDependencies": {
+    "typescript": "^3.2.1"
+  }
 }
