@@ -1,1 +1,1 @@
-[![npm](https://img.shields.io/npm/v/:package.svg)](https://github.com/cancelcraft/ColorUtility)
+[![npm](https://img.shields.io/npm/v/@cancelcraft/ColorUtility.svg)](https://github.com/cancelcraft/ColorUtility)
