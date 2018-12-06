@@ -175,9 +175,9 @@ export module ColorFactory {
 
         const segments = Functions.getSegments(hue);
 
-        this.rgb[segments[0]] = effectiveFloor;
-        this.rgb[segments[1]] = active;
-        this.rgb[segments[2]] = effectiveCeiling;
+        this.rgb[segments[0]] = Math.round(effectiveFloor);
+        this.rgb[segments[1]] = Math.round(active);
+        this.rgb[segments[2]] = Math.round(effectiveCeiling);
       }
     }
 
