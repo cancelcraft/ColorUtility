@@ -39,14 +39,25 @@ function hslToRgb(h: number, s: number, l: number){
 }
 
 describe("ColorFactory", () => {
-  it("should convert HSL to RGB", () => {
-    const h = 100/360, s = .5, l = .5
-    const [ expectedRed, expectedGreen, expectedBlue ] = hslToRgb(h, s, l)
 
+  for (let hue = 0; hue < 360; hue ++) {
+    const h = hue / 360, s = .7, l = .5
+    const [ expectedRed, expectedGreen, expectedBlue ] = hslToRgb(h, s, l)
     const color = ColorFactory.ByHSL.ByNormalized.create(h, s, l)
 
-    expect(color.red).to.equal(expectedRed)
-    expect(color.green).to.equal(expectedGreen)
-    expect(color.blue).to.equal(expectedBlue)
-  })
+    it(`should convert ${h} ${s} ${l} to red ${expectedRed}`, () => {
+
+      expect(color.red).to.equal(expectedRed)
+    })
+
+    it(`should convert ${h} ${s} ${l} to green ${expectedGreen}`, () => {
+
+      expect(color.green).to.equal(expectedGreen)
+    })
+
+    it(`should convert ${h} ${s} ${l} to blue ${expectedBlue}`, () => {
+
+      expect(color.blue).to.equal(expectedBlue)
+    })
+  }
 })

@@ -35,7 +35,6 @@ export module ColorFactory {
       }
 
       const floor = Math.round((luminosity - .5) / .5 * 255);
-
       return floor < 0 ? 0 : floor;
     }
 
@@ -155,29 +154,92 @@ export module ColorFactory {
       }
 
       constructor(public hue: number, public sat: number, public lum: number) {
+        const validateSat = (sat >= 0 && sat <= 1)
+        const validateLum = (lum >= 0 && lum <= 1)
+        const validateHue = (hue >= 0 && hue <= 1)
+        if (!validateHue || !validateLum || !validateSat) {
+          return
+        }
+
         // These values should be normailzed.
-
-        const floor   = Functions.calculateFloor(lum);
-        const ceiling = Functions.calculateCeiling(lum);
-        // This gives you the range based on luminosity,
-        // however, with saturation we take the differenec of ceiling and floor divide by two
-        /// and take the percent of that number equal to the percent saturation. The result is the effectie floor and ceiling
-
-        const midrange = (ceiling - floor) / 2;
-        const midpoint = midrange + floor;
+        // But we want hue in terms of 360 degrees
+        hue *= 360
 
 
+        // 1 - Math.abs(2L - 1)
+        // from .5 to 1, goes from 1 to 0
+        // from .5 to 0, goes from 1 to 0
+        // multiply the result by saturation [0, 1] -- yields Chroma
+        // get the hue section, H` [0, 6]
+        // 1 - Math.abs(H` % 2 - 1)
+        // H` is 0, is 0; climbing -- the remainder that doesn't surive the culling of minus 1, bolsters
+        // H` is 1, is 1; falling -- the remainder that survives the culling of minus 1, detracts
+        // H` is 2, is 0; climbing
+        // multiply the result by Chroma
+        // allocate to components
+        // augment components by L - C/2
 
-        const effectiveFloor = midpoint - Math.round(midrange * sat);
-        const effectiveCeiling = midpoint + Math.round(midrange * sat);
+        const chroma = (1 - Math.abs(2 * lum - 1)) * sat
+        const huePrime = hue / 60
+        const xvalue = chroma * (1 - Math.abs((huePrime % 2) - 1))
 
-        const active  = Functions.calculateActive(hue, effectiveFloor, effectiveCeiling);
+        if (huePrime >= 0 && huePrime <= 1) {
 
-        const segments = Functions.getSegments(hue);
+          this.rgb[0] = chroma
+          this.rgb[1] = xvalue
+          this.rgb[2] = 0
+        } else if (huePrime >= 1 && huePrime <= 2) {
 
-        this.rgb[segments[0]] = Math.round(effectiveFloor);
-        this.rgb[segments[1]] = Math.round(active);
-        this.rgb[segments[2]] = Math.round(effectiveCeiling);
+          this.rgb[0] = xvalue
+          this.rgb[1] = chroma
+          this.rgb[2] = 0
+        } else if (huePrime >= 2 && huePrime <= 3) {
+
+          this.rgb[0] = 0
+          this.rgb[1] = chroma
+          this.rgb[2] = xvalue
+        } else if (huePrime >= 3 && huePrime <= 4) {
+
+          this.rgb[0] = 0
+          this.rgb[1] = xvalue
+          this.rgb[2] = chroma
+        } else if (huePrime >= 4 && huePrime <= 5) {
+
+          this.rgb[0] = xvalue
+          this.rgb[1] = 0
+          this.rgb[2] = chroma
+        } else if (huePrime >= 5 && huePrime <= 6) {
+
+          this.rgb[0] = chroma
+          this.rgb[1] = 0
+          this.rgb[2] = xvalue
+        } else {
+          this.rgb[0] = 0
+          this.rgb[1] = 0
+          this.rgb[2] = 0
+        }
+
+
+        const mvalue = lum - (chroma / 2)
+        this.rgb[0] = Math.round((this.rgb[0] + mvalue) * 255)
+        this.rgb[1] = Math.round((this.rgb[1] + mvalue) * 255)
+        this.rgb[2] = Math.round((this.rgb[2] + mvalue) * 255)
+
+        // const floor   = Functions.calculateFloor(lum);
+        // const ceiling = Functions.calculateCeiling(lum);
+        //
+        // const midrange = (ceiling - floor) / 2;
+        // const midpoint = midrange + floor;
+        //
+        // const effectiveFloor = midpoint - Math.round(midrange * sat);
+        // const effectiveCeiling = midpoint + Math.round(midrange * sat);
+        //
+        // const active  = Functions.calculateActive(hue, effectiveFloor, effectiveCeiling);
+        // const segments = Functions.getSegments(hue);
+        //
+        // this.rgb[segments[0]] = Math.trunc(effectiveFloor);
+        // this.rgb[segments[1]] = Math.trunc(active);
+        // this.rgb[segments[2]] = Math.trunc(effectiveCeiling);
       }
     }
 
