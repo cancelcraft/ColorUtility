@@ -183,32 +183,35 @@ export module ColorFactory {
         const huePrime = hue / 60
         const xvalue = chroma * (1 - Math.abs((huePrime % 2) - 1))
 
+        console.log(huePrime, chroma, xvalue)
+
+
         if (huePrime >= 0 && huePrime <= 1) {
 
           this.rgb[0] = chroma
           this.rgb[1] = xvalue
           this.rgb[2] = 0
-        } else if (huePrime >= 1 && huePrime <= 2) {
+        } else if (huePrime > 1 && huePrime <= 2) {
 
           this.rgb[0] = xvalue
           this.rgb[1] = chroma
           this.rgb[2] = 0
-        } else if (huePrime >= 2 && huePrime <= 3) {
+        } else if (huePrime > 2 && huePrime <= 3) {
 
           this.rgb[0] = 0
           this.rgb[1] = chroma
           this.rgb[2] = xvalue
-        } else if (huePrime >= 3 && huePrime <= 4) {
+        } else if (huePrime > 3 && huePrime <= 4) {
 
           this.rgb[0] = 0
           this.rgb[1] = xvalue
           this.rgb[2] = chroma
-        } else if (huePrime >= 4 && huePrime <= 5) {
+        } else if (huePrime > 4 && huePrime <= 5) {
 
           this.rgb[0] = xvalue
           this.rgb[1] = 0
           this.rgb[2] = chroma
-        } else if (huePrime >= 5 && huePrime <= 6) {
+        } else if (huePrime > 5 && huePrime <= 6) {
 
           this.rgb[0] = chroma
           this.rgb[1] = 0

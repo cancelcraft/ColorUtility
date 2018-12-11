@@ -2,62 +2,68 @@ import { ColorFactory, Color } from "../index"
 import { expect } from "chai"
 import "mocha"
 
-/**
- * Converts an HSL color value to RGB. Conversion formula
- * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
- * Assumes h, s, and l are contained in the set [0, 1] and
- * returns r, g, and b in the set [0, 255].
- *
- * @param   {number}  h       The hue
- * @param   {number}  s       The saturation
- * @param   {number}  l       The lightness
- * @return  {Array}           The RGB representation
- */
-function hslToRgb(h: number, s: number, l: number){
-    var r, g, b;
-
-    if(s == 0){
-        r = g = b = l; // achromatic
-    }else{
-        var hue2rgb = function hue2rgb(p: number, q: number, t: number){
-            if(t < 0) t += 1;
-            if(t > 1) t -= 1;
-            if(t < 1/6) return p + (q - p) * 6 * t;
-            if(t < 1/2) return q;
-            if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-            return p;
-        }
-
-        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-        var p = 2 * l - q;
-        r = hue2rgb(p, q, h + 1/3);
-        g = hue2rgb(p, q, h);
-        b = hue2rgb(p, q, h - 1/3);
-    }
-
-    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-}
+const testData = [
+  [[0, .1, .1],    [28, 23, 23]],
+  [[10, 0, .1],    [26, 26, 26]],
+  [[10, .1, 0],    [0, 0, 0]],
+  [[10, 0, 0],     [0, 0, 0]],
+  [[360, .1, .1],  [28, 23, 23]],
+  [[350, 0, .1],   [26, 26, 26]],
+  [[350, .1, 0],   [0, 0, 0]],
+  [[350, 0, 0],    [0, 0, 0]],
+  [[10, 1, .9],    [255, 213, 204]],
+  [[10, .9, .1],   [48, 10, 3]],
+  [[10, 1, 1],     [255, 255, 255]],
+  [[360, .5, .5],  [191, 64, 64]],
+  [[330, .5, .5],  [191, 64, 128]],
+  [[300, .5, .5],  [191, 64, 191]],
+  [[270, .5, .5],  [128, 64, 191]],
+  [[250, .5, .5],  [85, 64, 191]],
+  [[210, .5, .5],  [64, 128, 191]],
+  [[180, .5, .5],  [64, 191, 191]],
+  [[150, .5, .5],  [64, 191, 128]],
+  [[120, .5, .5],  [64, 191, 64]],
+  [[90, .5, .5],   [128, 191, 64]],
+  [[60, .5, .5],   [191, 191, 64]],
+  [[30, .5, .5],   [191, 128, 64]],
+  [[0, .5, .5],    [191, 64, 64]],
+  [[270, .25, .5], [128, 96, 159]],
+  [[270, .12, .5], [128, 112, 143]],
+  [[270, .37, .5], [128, 80, 175]],
+  [[270, .62, .5], [128, 48, 207]],
+  [[270, .75, .5], [128, 32, 223]],
+  [[270, .87, .5], [128, 17, 238]],
+  [[120, 1, .2],   [0, 102, 0]],
+  [[120, 1, .4],   [0, 204, 0]],
+  [[120, 1, .6],   [51, 255, 51]],
+  [[120, 1, .8],   [153, 255, 153]],
+  [[125, .83, .23],[10, 107, 18]],
+  [[153, .17, .23],[49, 69, 60]],
+  [[217, .41, .34],[51, 78, 122]],
+  [[303, .61, .45],[185, 45, 178]],
+  [[339, .77, .51],[226, 34, 101]]
+]
 
 describe("ColorFactory", () => {
+  testData.forEach(eachTest => {
+    let [ [hue, s, l], [expectedRed, expectedGreen, expectedBlue] ] = eachTest
+    const h = hue / 360
 
-  for (let hue = 0; hue < 360; hue ++) {
-    const h = hue / 360, s = .7, l = .5
-    const [ expectedRed, expectedGreen, expectedBlue ] = hslToRgb(h, s, l)
     const color = ColorFactory.ByHSL.ByNormalized.create(h, s, l)
 
-    it(`should convert ${h} ${s} ${l} to red ${expectedRed}`, () => {
+    it(`should convert ${hue} ${s} ${l} to red ${expectedRed}`, () => {
 
       expect(color.red).to.equal(expectedRed)
     })
 
-    it(`should convert ${h} ${s} ${l} to green ${expectedGreen}`, () => {
+    it(`should convert ${hue} ${s} ${l} to green ${expectedGreen}`, () => {
 
       expect(color.green).to.equal(expectedGreen)
     })
 
-    it(`should convert ${h} ${s} ${l} to blue ${expectedBlue}`, () => {
+    it(`should convert ${hue} ${s} ${l} to blue ${expectedBlue}`, () => {
 
       expect(color.blue).to.equal(expectedBlue)
     })
-  }
+  })
 })
