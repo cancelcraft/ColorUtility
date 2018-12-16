@@ -18,7 +18,6 @@ export function decomposeCompoundRgb(compoundRgb: number) {
 export function packIntegerRgb(color: Color) {
   const { red, green, blue } = color
 
-  console.log(red, green, blue)
 
   let packedColor = red & 0xFF
   packedColor += (green & 0xFF) << 8
