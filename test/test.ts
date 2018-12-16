@@ -1,4 +1,4 @@
-import { ColorFactory, Color } from "../index"
+import { ColorFactory, Color, packIntegerRgb } from "../index"
 import { expect } from "chai"
 import "mocha"
 
@@ -41,29 +41,46 @@ const testData = [
   [[153, .17, .23],[49, 69, 60]],
   [[217, .41, .34],[51, 78, 122]],
   [[303, .61, .45],[185, 45, 178]],
-  [[339, .77, .51],[226, 34, 101]]
+  [[339, .77, .51],[226, 34, 101]],
+  [[270, 1, .5],   [128, 0, 255]]
 ]
 
+
 describe("ColorFactory", () => {
-  testData.forEach(eachTest => {
-    let [ [hue, s, l], [expectedRed, expectedGreen, expectedBlue] ] = eachTest
-    const h = hue / 360
+  describe("By Normalized", () => {
+    testData.forEach(eachTest => {
+      let [ [hue, s, l], [expectedRed, expectedGreen, expectedBlue] ] = eachTest
+      const h = hue / 360
 
-    const color = ColorFactory.ByHSL.ByNormalized.create(h, s, l)
+      const color = ColorFactory.ByHSL.ByNormalized.create(h, s, l)
 
-    it(`should convert ${hue} ${s} ${l} to red ${expectedRed}`, () => {
+      it(`should convert ${hue} ${s} ${l} to red ${expectedRed}`, () => {
 
-      expect(color.red).to.equal(expectedRed)
+        expect(color.red).to.equal(expectedRed)
+      })
+
+      it(`should convert ${hue} ${s} ${l} to green ${expectedGreen}`, () => {
+
+        expect(color.green).to.equal(expectedGreen)
+      })
+
+      it(`should convert ${hue} ${s} ${l} to blue ${expectedBlue}`, () => {
+
+        expect(color.blue).to.equal(expectedBlue)
+      })
     })
+  })
 
-    it(`should convert ${hue} ${s} ${l} to green ${expectedGreen}`, () => {
+  describe("By Standard", () => {
+    let hue = 270, sat = 100, lum = 50
+    let red = 128, green = 0, blue = 255
 
-      expect(color.green).to.equal(expectedGreen)
-    })
+    it(`should convert ${hue} ${sat} ${lum} to ${red} ${green} ${blue}`, () => {
+      const color = ColorFactory.ByHSL.ByStandard.create(hue, sat, lum)
 
-    it(`should convert ${hue} ${s} ${l} to blue ${expectedBlue}`, () => {
-
-      expect(color.blue).to.equal(expectedBlue)
+      expect(color.red).to.equal(red)
+      expect(color.green).to.equal(green)
+      expect(color.blue).to.equal(blue)
     })
   })
 })
